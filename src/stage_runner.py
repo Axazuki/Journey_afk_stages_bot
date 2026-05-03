@@ -132,7 +132,9 @@ class StageRunner:
         return True
 
     def _tap(self, m: Match) -> None:
-        self._agent.tap_abs(m.x, m.y)
+        # Match coords are in screenshot space (relative to the window's
+        # top-left). tap_rel adds the live window offset before clicking.
+        self._agent.tap_rel(m.x, m.y)
 
     def _stuck(self, reason: str) -> ExitReason:
         log.error("STUCK: %s", reason)
