@@ -14,7 +14,7 @@ Console utility that automatically pushes AFK Stages in the native Windows AFK J
 
 ## Build
 
-The Windows `.exe` is produced by the **Build Windows EXE** GitHub Action on every push to `main`. Open the latest run, download the `afkj-bot-win` artifact, unzip it on Windows. Run `afkj-bot.exe` from the unzipped folder — `config.ini` and `templates/` must sit alongside it.
+The Windows `.exe` is produced by the **Build Windows EXE** GitHub Action on every push to `develop` (and `main`, once it has commits). Open the latest run, download the `afkj-bot-win` artifact, unzip it on Windows. Run `afkj-bot.exe` from the unzipped folder — `config.ini` and `templates/` must sit alongside it.
 
 ## Templates
 
