@@ -5,14 +5,15 @@ Console utility that automatically pushes AFK Stages in the native Windows AFK J
 ## Usage (Windows)
 
 1. Launch AFK Journey, switch to **borderless windowed** mode at the resolution the templates were captured for.
-2. Navigate to the **AFK Stages** screen with Battle / Phantimal Challenge tabs visible.
+2. Navigate to the **formation editor** for the stage you want to push (the screen with the `Records` and `Battle` buttons visible).
 3. Run one of:
-   - Double-click `run-phantimal.bat` or `run-battle.bat` (window stays open after exit so you can read the log).
+   - Double-click `run.bat` to start auto-pushing.
+   - Double-click `run-debug.bat` for verbose logging.
    - Double-click `run-smoke.bat` to verify the bot can find the game window — it just attaches, screenshots once into `debug/`, and exits.
    - Or from a terminal in the unzipped folder:
 
      ```
-     .\afkj-bot.exe --mode {phantimal|battle} [--debug]
+     .\afkj-bot.exe [--debug]
      .\afkj-bot.exe --smoke
      ```
 

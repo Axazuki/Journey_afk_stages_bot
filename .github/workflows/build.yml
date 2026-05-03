@@ -33,8 +33,8 @@ jobs:
           Copy-Item config.ini release/afkj-bot/
           Copy-Item -Recurse templates release/afkj-bot/
           Copy-Item README.md release/afkj-bot/
-          Copy-Item run-phantimal.bat release/afkj-bot/
-          Copy-Item run-battle.bat release/afkj-bot/
+          Copy-Item run.bat release/afkj-bot/
+          Copy-Item run-debug.bat release/afkj-bot/
           Copy-Item run-smoke.bat release/afkj-bot/
           Compress-Archive -Path release/afkj-bot/* -DestinationPath release/afkj-bot-win.zip
 
