@@ -8,11 +8,16 @@ One iteration:
     1. tap Records
     2. tap right arrow × current_formation times
     3. tap Copy
-    4. tap Battle
-    5. wait for btn_battle_win (victory) or btn_retry (defeat)
-    6a. victory  → tap btn_battle_win, reset counters,
+    4. wait for btn_battle (formation accepted) or btn_cancel
+       (locked-hero popup — formation has heroes the player doesn't own)
+       on cancel: tap Cancel, advance current_formation, tap right arrow,
+       tap Copy, repeat the check until a formation is accepted or we
+       exhaust the formation budget
+    5. tap Battle
+    6. wait for btn_battle_win (victory) or btn_retry (defeat)
+    7a. victory  → tap btn_battle_win, reset counters,
                    game auto-advances to next stage's formation editor
-    6b. defeat   → tap btn_retry, fail_counter += 1
+    7b. defeat   → tap btn_retry, fail_counter += 1
                    if fail_counter exhausted, advance current_formation
                    if all formations exhausted, exit DONE
 """
@@ -75,6 +80,10 @@ class StageRunner:
             if not self._tap_when_visible("btn_copy", timing.short_wait_sec):
                 return self._stuck("btn_copy not found in records")
 
+            skip_result = self._skip_locked_formations(timing, records_cfg, strategy)
+            if skip_result is not None:
+                return skip_result
+
             if not self._tap_when_visible("btn_battle", timing.short_wait_sec):
                 return self._stuck("btn_battle not found on formation screen")
 
@@ -117,6 +126,45 @@ class StageRunner:
                         strategy.max_failures_per_formation,
                     )
                     return ExitReason.DONE
+
+    def _skip_locked_formations(self, timing, records_cfg, strategy) -> ExitReason | None:
+        """After Copy, peek at the screen: if the locked-hero popup is up,
+        cancel and advance to the next formation, looping until either a
+        formation is accepted (returns None) or we run out (returns DONE).
+        """
+        while True:
+            outcome = self._matcher.wait_for_any(
+                ["btn_battle", "btn_cancel"],
+                self._agent,
+                timeout=timing.short_wait_sec,
+                interval=timing.poll_interval_sec,
+            )
+            if outcome is None:
+                return self._stuck("after Copy: neither btn_battle nor btn_cancel visible")
+
+            name, match = outcome
+            if name == "btn_battle":
+                return None  # formation accepted, ready to fight
+
+            log.info(
+                "locked-hero popup on formation %d; cancelling and trying next",
+                self._current_formation,
+            )
+            self._tap(match)
+
+            self._current_formation += 1
+            if self._current_formation >= strategy.max_formations:
+                log.info(
+                    "DONE: ran out of formations while skipping locked-hero ones",
+                )
+                return ExitReason.DONE
+
+            if not self._tap_when_visible("btn_arrow_right", timing.short_wait_sec):
+                return self._stuck("btn_arrow_right not found after Cancel")
+            time.sleep(records_cfg.arrow_settle_sec)
+
+            if not self._tap_when_visible("btn_copy", timing.short_wait_sec):
+                return self._stuck("btn_copy not found after locked-hero skip")
 
     def _tap_when_visible(self, name: str, timeout: float) -> bool:
         m = self._matcher.wait_for(
