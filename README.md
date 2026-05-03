@@ -8,11 +8,15 @@ Console utility that automatically pushes AFK Stages in the native Windows AFK J
 2. Navigate to the **AFK Stages** screen with Battle / Phantimal Challenge tabs visible.
 3. Run one of:
    - Double-click `run-phantimal.bat` or `run-battle.bat` (window stays open after exit so you can read the log).
+   - Double-click `run-smoke.bat` to verify the bot can find the game window — it just attaches, screenshots once into `debug/`, and exits.
    - Or from a terminal in the unzipped folder:
 
      ```
      .\afkj-bot.exe --mode {phantimal|battle} [--debug]
+     .\afkj-bot.exe --smoke
      ```
+
+> Display scaling other than 100% (Settings → System → Display → Scale) can offset window coordinates. If `--smoke` saves a screenshot that's clipped or shifted, set scale to 100% and retry.
 
 ## Build
 

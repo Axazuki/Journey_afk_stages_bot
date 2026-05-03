@@ -35,6 +35,7 @@ jobs:
           Copy-Item README.md release/afkj-bot/
           Copy-Item run-phantimal.bat release/afkj-bot/
           Copy-Item run-battle.bat release/afkj-bot/
+          Copy-Item run-smoke.bat release/afkj-bot/
           Compress-Archive -Path release/afkj-bot/* -DestinationPath release/afkj-bot-win.zip
 
       - uses: actions/upload-artifact@v4
